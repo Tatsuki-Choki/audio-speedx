@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 280px;
+      font-family: 'DM Sans', sans-serif;
+      background: #ffffff;
+      color: #1a1a1f;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .header-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
+      position: relative;
+    }
+
+    .header-icon::after {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .header-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+
+    .display {
+      text-align: center;
+      padding: 18px 0 22px;
+      position: relative;
+    }
+
+    .display::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 60%, rgba(59, 130, 246, 0.03) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .speed-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 52px;
+      font-weight: 700;
+      letter-spacing: -2px;
+      color: #0f172a;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .speed-unit {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      font-weight: 400;
+      color: #cbd5e1;
+      margin-left: 2px;
+      vertical-align: super;
+    }
+
+    .speed-label {
+      display: block;
+      font-size: 10px;
+      color: #b0b8c8;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .slider-track {
+      position: relative;
+      padding: 10px 0 16px;
+    }
+
+    .slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      background: #e2e8f0;
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #3b82f6, #2563eb);
+      border: none;
+      cursor: grab;
+      box-shadow:
+        0 1px 4px rgba(37, 99, 235, 0.3),
+        0 0 0 3px #ffffff,
+        0 0 0 4px #e2e8f0;
+      transition: box-shadow 0.15s;
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+      box-shadow:
+        0 1px 6px rgba(37, 99, 235, 0.4),
+        0 0 0 3px #ffffff,
+        0 0 0 4px rgba(59, 130, 246, 0.3);
+    }
+
+    .slider::-webkit-slider-thumb:active {
+      cursor: grabbing;
+      box-shadow:
+        0 1px 8px rgba(37, 99, 235, 0.5),
+        0 0 0 3px #ffffff,
+        0 0 0 5px rgba(59, 130, 246, 0.4);
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 2px;
+      margin-top: 6px;
+    }
+
+    .slider-labels span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #cbd5e1;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e2e8f0 30%, #e2e8f0 70%, transparent);
+      margin: 14px 0;
+    }
+
+    .presets-label {
+      font-size: 10px;
+      color: #94a3b8;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .presets {
+      display: flex;
+      gap: 6px;
+    }
+
+    .preset-btn {
+      flex: 1;
+      padding: 9px 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      color: #64748b;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preset-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .preset-btn:hover {
+      border-color: #cbd5e1;
+      color: #334155;
+      background: #f1f5f9;
+    }
+
+    .preset-btn.active {
+      border-color: rgba(59, 130, 246, 0.4);
+      color: #2563eb;
+      background: rgba(59, 130, 246, 0.06);
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.08);
+    }
+
+    .preset-btn:active {
+      transform: scale(0.96);
+    }
+
+    .footer {
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .reset-btn {
+      background: none;
+      border: none;
+      color: #cbd5e1;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+
+    .reset-btn:hover {
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon"></div>
+    <span class="header-title">Speed Control</span>
+  </div>
+
+  <div class="display">
+    <span class="speed-value" id="speedDisplay">1.0</span><span class="speed-unit">×</span>
+    <span class="speed-label">playback rate</span>
+  </div>
+
+  <div class="slider-track">
+    <input type="range" class="slider" id="speedSlider" min="0.25" max="5" step="0.05" value="1">
+    <div class="slider-labels">
+      <span>0.25</span>
+      <span>1.0</span>
+      <span>2.5</span>
+      <span>5.0</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="presets-label">Presets</div>
+  <div class="presets">
+    <button class="preset-btn active" data-speed="1">1×</button>
+    <button class="preset-btn" data-speed="1.25">1.25×</button>
+    <button class="preset-btn" data-speed="1.5">1.5×</button>
+    <button class="preset-btn" data-speed="1.75">1.75×</button>
+    <button class="preset-btn" data-speed="2">2×</button>
+  </div>
+
+  <div class="footer">
+    <button class="reset-btn" id="resetBtn">Reset to 1.0×</button>
+    <button class="reset-btn" id="showFloating">Show Floating Controller</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
